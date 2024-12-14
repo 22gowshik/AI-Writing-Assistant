@@ -13,6 +13,11 @@ model = genai.GenerativeModel("gemini-1.5-pro")
 
 history = []
 
+@app.route('/')
+def home():
+    return "Welcome to the AI Assistant API!"
+
+
 @app.route('/generate', methods=['POST'])
 def generate():
     try:
