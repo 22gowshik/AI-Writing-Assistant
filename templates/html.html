@@ -345,7 +345,30 @@ showHistoryButton.addEventListener('click', () => {
   renderHistory();
 });
 
-document.getElementById('checkGrammar').addEventListener('click', async () => {
+// Handle API calls with error checks
+const handleFetchError = async (url, input, responseContainer, action) => {
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input })
+    });
+
+    if (!res.ok) { // If response is not OK, display an error
+      throw new Error("Server is not reachable.");
+    }
+
+    const data = await res.json();
+    responseContainer.textContent = data.generated_text || data.error;
+    addHistory(action, input, data.generated_text || data.error);
+  } catch (err) {
+    responseContainer.textContent = "The server is currently unavailable. Please try again later.";
+    console.error("Fetch error:", err); // Log error for debugging purposes
+  }
+};
+
+// Example usage for grammar checker
+document.getElementById('checkGrammar').addEventListener('click', () => {
   const input = document.getElementById('grammarInput').value;
   const responseContainer = document.getElementById('grammarResponse');
 
@@ -354,21 +377,11 @@ document.getElementById('checkGrammar').addEventListener('click', async () => {
     return;
   }
 
-  try {
-    const res = await fetch("http://127.0.0.1:5000/grammar-checker", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input })
-    });
-    const data = await res.json();
-    responseContainer.textContent = data.generated_text || data.error;
-    addHistory('Grammar Checker', input, data.generated_text || data.error);
-  } catch (err) {
-    responseContainer.textContent = "An error occurred.";
-  }
+  handleFetchError("http://127.0.0.1:5000/grammar-checker", input, responseContainer, 'Grammar Checker');
 });
 
-document.getElementById('generateWriting').addEventListener('click', async () => {
+// Example usage for writing assistant
+document.getElementById('generateWriting').addEventListener('click', () => {
   const input = document.getElementById('writingInput').value;
   const responseContainer = document.getElementById('writingResponse');
 
@@ -377,21 +390,11 @@ document.getElementById('generateWriting').addEventListener('click', async () =>
     return;
   }
 
-  try {
-    const res = await fetch("http://127.0.0.1:5000/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input })
-    });
-    const data = await res.json();
-    responseContainer.textContent = data.generated_text || data.error;
-    addHistory('Writing Assistant', input, data.generated_text || data.error);
-  } catch (err) {
-    responseContainer.textContent = "An error occurred.";
-  }
+  handleFetchError("http://127.0.0.1:5000/generate", input, responseContainer, 'Writing Assistant');
 });
 
-document.getElementById('checkPlagiarism').addEventListener('click', async () => {
+// Similarly, update the rest of your fetch functions:
+document.getElementById('checkPlagiarism').addEventListener('click', () => {
   const input = document.getElementById('plagiarismInput').value;
   const responseContainer = document.getElementById('plagiarismResponse');
 
@@ -400,21 +403,10 @@ document.getElementById('checkPlagiarism').addEventListener('click', async () =>
     return;
   }
 
-  try {
-    const res = await fetch("http://127.0.0.1:5000/plagiarism-checker", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input })
-    });
-    const data = await res.json();
-    responseContainer.textContent = data.generated_text || data.error;
-    addHistory('Plagiarism Checker', input, data.generated_text || data.error);
-  } catch (err) {
-    responseContainer.textContent = "An error occurred.";
-  }
+  handleFetchError("http://127.0.0.1:5000/plagiarism-checker", input, responseContainer, 'Plagiarism Checker');
 });
 
-document.getElementById('summarizeText').addEventListener('click', async () => {
+document.getElementById('summarizeText').addEventListener('click', () => {
   const input = document.getElementById('summarizerInput').value;
   const responseContainer = document.getElementById('summarizerResponse');
 
@@ -423,21 +415,10 @@ document.getElementById('summarizeText').addEventListener('click', async () => {
     return;
   }
 
-  try {
-    const res = await fetch("http://127.0.0.1:5000/summarize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input })
-    });
-    const data = await res.json();
-    responseContainer.textContent = data.generated_text || data.error;
-    addHistory('Summarizer', input, data.generated_text || data.error);
-  } catch (err) {
-    responseContainer.textContent = "An error occurred.";
-  }
+  handleFetchError("http://127.0.0.1:5000/summarize", input, responseContainer, 'Summarizer');
 });
 
-document.getElementById('brainstromingText').addEventListener('click', async () => {
+document.getElementById('brainstromingText').addEventListener('click', () => {
   const input = document.getElementById('brainstromingInput').value;
   const responseContainer = document.getElementById('brainstromingResponse');
 
@@ -446,20 +427,8 @@ document.getElementById('brainstromingText').addEventListener('click', async () 
     return;
   }
 
-  try {
-    const res = await fetch("http://127.0.0.1:5000/Brainstroming", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input })
-    });
-    const data = await res.json();
-    responseContainer.textContent = data.generated_text || data.error;
-    addHistory('Brainstroming', input, data.generated_text || data.error);
-  } catch (err) {
-    responseContainer.textContent = "An error occurred.";
-  }
+  handleFetchError("http://127.0.0.1:5000/Brainstroming", input, responseContainer, 'Brainstorming');
 });
-
   </script>
 
 </body>
