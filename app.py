@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
 from flask_cors import CORS  
 import google.generativeai as genai
 
@@ -15,7 +15,7 @@ history = []
 
 @app.route('/')
 def home():
-    return "Welcome to the AI Assistant API!"
+    return render_template('html.html')
 
 
 @app.route('/generate', methods=['POST'])
