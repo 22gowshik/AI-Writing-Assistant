@@ -1,1 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Writing Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+        overflow-y: auto;
+    }
 
+    .container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 900px;
+        padding: 50px;
+        box-sizing: border-box;
+        text-align: center;
+        margin: 30px auto;
+    }
+
+    h1 {
+        font-size: 48px;
+        color: #6c5ce7;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    textarea {
+        width: 100%;
+        height: 200px;
+        padding: 20px;
+        font-size: 18px;
+        border-radius: 15px;
+        border: 2px solid #ddd;
+        margin-bottom: 25px;
+        resize: none;
+        background-color: #f4f4f9;
+        overflow-y: auto;
+    }
+
+    button {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        color: #fff;
+        font-size: 20px;
+        padding: 20px 40px;
+        border-radius: 15px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-top: 15px;
+        transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    button:hover {
+        background: linear-gradient(135deg, #5b3cc4, #8e44ad);
+        transform: scale(1.05);
+    }
+
+    .response-container, .history-container {
+        margin-top: 30px;
+        padding: 20px;
+        border: 2px solid #ddd;
+        border-radius: 15px;
+        background-color: #f7f7f7;
+        font-size: 18px;
+        text-align: left;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .hidden {
+        display: none;
+    }
+    .searchHistory {
+    width: 100%; 
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 30px; 
+    border: none;
+    background: linear-gradient(135deg, #e3e3f7, #ffffff);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(255, 255, 255, 0.6);
+    color: #6c5ce7;
+    box-sizing: border-box; 
+    outline: none;
+    text-align: center; 
+    transition: all 0.4s ease;
+}
+
+.searchHistory:focus {
+    background: linear-gradient(135deg, #d6d6f0, #ffffff);
+    box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3), inset 0 1px 5px rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px); /* Adds a slight lift effect */
+}
+
+.searchHistory:hover {
+    background: linear-gradient(135deg, #f0f0ff, #ffffff);
+    box-shadow: 0 6px 15px rgba(108, 92, 231, 0.2);
+}
+
+.searchHistory::placeholder {
+    color: rgba(108, 92, 231, 0.7);
+    font-style: italic;
+}
+
+</style>
+
+</head>
+<body>
+
+  <div id="mainPage" class="container">
+    <h1>AI Writing Assistant</h1>
+    <button id="writingAssistantButton">Writing Assistant</button>
+    <button id="grammarCheckerButton">Grammar Checker</button>
+    <button id="plagiarismCheckerButton">Plagiarism Checker</button>
+    <button id="summarizerButton">Summarizer</button>
+    <button id="brainstromingButton">Brainstorming</button>
+    <button id="showHistoryButton">Show History</button>
+  </div>
+
+  <div id="grammarCheckerPage" class="container hidden">
+    <h1>Grammar Checker</h1>
+    <textarea id="grammarInput" placeholder="Type your text here..."></textarea>
+    <button id="checkGrammar">Check Grammar</button>
+    <div id="grammarResponse" class="response-container"></div>
+    <button id="backToMain1">Back</button>
+  </div>
+
+  <div id="writingAssistantPage" class="container hidden">
+    <h1>Writing Assistant</h1>
+    <textarea id="writingInput" placeholder="Type your topic or outline here..."></textarea>
+    <button id="generateWriting">Generate</button>
+    <div id="writingResponse" class="response-container"></div>
+    <button id="backToMain2">Back</button>
+  </div>
+
+  <div id="plagiarismCheckerPage" class="container hidden">
+    <h1>Plagiarism Checker</h1>
+    <textarea id="plagiarismInput" placeholder="Paste your text here..."></textarea>
+    <button id="checkPlagiarism">Check Plagiarism</button>
+    <div id="plagiarismResponse" class="response-container"></div>
+    <button id="backToMain4">Back</button>
+  </div>
+
+  <div id="summarizerPage" class="container hidden">
+    <h1>Summarizer</h1>
+    <textarea id="summarizerInput" placeholder="Paste the text to summarize here..."></textarea>
+    <button id="summarizeText">Summarize</button>
+    <div id="summarizerResponse" class="response-container"></div>
+    <button id="backToMain5">Back</button>
+  </div>
+
+  <div id="brainstromingPage" class="container hidden">
+    <h1>Brainstorm</h1>
+    <textarea id="brainstromingInput" placeholder="Please enter the text to Brainstorm ..."></textarea>
+    <button id="brainstromingText">Brainstorm</button>
+    <div id="brainstromingResponse" class="response-container"></div>
+    <button id="backToMain6">Back</button>
+  </div>
+
+  <div id="historyPage" class="container hidden">
+    <h1>History</h1>
+    <div class="searchHistory">
+      <input type="text" id="searchHistory" placeholder="Search history..." />
+    </div>
+    <button id="deleteAllHistory">Delete All</button>
+    <div id="historyContainer" class="history-container"></div>
+    <button id="backToMain3">Back</button>
+  </div>
+
+  <script>
+    const mainPage = document.getElementById('mainPage');
+    const grammarCheckerPage = document.getElementById('grammarCheckerPage');
+    const writingAssistantPage = document.getElementById('writingAssistantPage');
+    const plagiarismCheckerPage = document.getElementById('plagiarismCheckerPage');
+    const summarizerPage = document.getElementById('summarizerPage');
+    const brainstroming = document.getElementById('brainstromingPage');
+    const historyPage = document.getElementById('historyPage');
+    const historyContainer = document.getElementById('historyContainer');
+
+    
+
+    const grammarCheckerButton = document.getElementById('grammarCheckerButton');
+    const writingAssistantButton = document.getElementById('writingAssistantButton');
+    const plagiarismCheckerButton = document.getElementById('plagiarismCheckerButton');
+    const brainstromingButton = document.getElementById('brainstromingButton');
+    const summarizerButton = document.getElementById('summarizerButton');
+    const showHistoryButton = document.getElementById('showHistoryButton');
+    const backToMain1 = document.getElementById('backToMain1');
+    const backToMain2 = document.getElementById('backToMain2');
+    const backToMain3 = document.getElementById('backToMain3');
+    const backToMain4 = document.getElementById('backToMain4');
+    const backToMain5 = document.getElementById('backToMain5');
+    const backToMain6 = document.getElementById('backToMain6');
+
+
+    const deleteAllHistoryButton = document.getElementById('deleteAllHistory');
+
+    deleteAllHistoryButton.addEventListener('click', () => {
+  // Confirm if the user really wants to delete all history
+  if (confirm("Are you sure you want to delete all history?")) {
+    // Remove history from localStorage
+    localStorage.removeItem('history');
+
+    // Clear the history array
+    history.length = 0;  // Clear the array directly
+
+    // Clear the history container content
+    historyContainer.innerHTML = '<p>No entries found.</p>';
+
+    // Re-render the history page to ensure it's updated
+    renderHistory();
+  }
+});
+
+
+
+    grammarCheckerButton.addEventListener('click', () => {
+      mainPage.classList.add('hidden');
+      grammarCheckerPage.classList.remove('hidden');
+    });
+
+    writingAssistantButton.addEventListener('click', () => {
+      mainPage.classList.add('hidden');
+      writingAssistantPage.classList.remove('hidden');
+    });
+
+    plagiarismCheckerButton.addEventListener('click', () => {
+      mainPage.classList.add('hidden');
+      plagiarismCheckerPage.classList.remove('hidden');
+    });
+
+    summarizerButton.addEventListener('click', () => {
+      mainPage.classList.add('hidden');
+      summarizerPage.classList.remove('hidden');
+    });
+
+    brainstromingButton.addEventListener('click', () => {
+      mainPage.classList.add('hidden');
+      brainstroming.classList.remove('hidden');
+    });
+
+    showHistoryButton.addEventListener('click', () => {
+      mainPage.classList.add('hidden');
+      historyPage.classList.remove('hidden');
+      renderHistory();
+    });
+
+    backToMain1.addEventListener('click', () => {
+      grammarCheckerPage.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    });
+
+    backToMain2.addEventListener('click', () => {
+      writingAssistantPage.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    });
+
+    backToMain3.addEventListener('click', () => {
+      historyPage.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    });
+
+    backToMain4.addEventListener('click', () => {
+      plagiarismCheckerPage.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    });
+
+    backToMain5.addEventListener('click', () => {
+      summarizerPage.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    });
+
+    backToMain6.addEventListener('click', () => {
+      brainstroming.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    });
+
+    const history = JSON.parse(localStorage.getItem('history')) || [];
+
+const addHistory = (type, input, response) => {
+  const newEntry = { type, input, response };
+  history.push(newEntry);
+  localStorage.setItem('history', JSON.stringify(history)); 
+};
+
+const renderHistory = (filter = "") => {
+  historyContainer.innerHTML = '';
+  history.forEach((entry, index) => {
+    if (entry.type.toLowerCase().includes(filter.toLowerCase()) || 
+        entry.input.toLowerCase().includes(filter.toLowerCase()) || 
+        entry.response.toLowerCase().includes(filter.toLowerCase())) {
+      const entryElement = document.createElement('div');
+      entryElement.innerHTML = `
+        <div>
+          <strong>${index + 1}. ${entry.type}</strong><br>
+          <em>Input:</em> ${entry.input}<br>
+          <em>Output:</em> ${entry.response}<br>
+          <button class="deleteHistory" data-index="${index}">Delete</button>
+        </div>
+        <hr>
+      `;
+      historyContainer.appendChild(entryElement);
+    }
+  });
+
+  if (historyContainer.innerHTML === '') {
+    historyContainer.innerHTML = '<p>No entries found.</p>';
+  }
+};
+
+document.getElementById('searchHistory').addEventListener('input', (e) => {
+  const filter = e.target.value;
+  renderHistory(filter);
+});
+
+historyContainer.addEventListener('click', (e) => {
+  if (e.target.classList.contains('deleteHistory')) {
+    const index = e.target.getAttribute('data-index');
+    history.splice(index, 1);
+    localStorage.setItem('history', JSON.stringify(history));
+    renderHistory();
+  }
+});
+
+showHistoryButton.addEventListener('click', () => {
+  mainPage.classList.add('hidden');
+  historyPage.classList.remove('hidden');
+  renderHistory();
+});
+
+document.getElementById('checkGrammar').addEventListener('click', async () => {
+  const input = document.getElementById('grammarInput').value;
+  const responseContainer = document.getElementById('grammarResponse');
+
+  if (!input) {
+    responseContainer.textContent = "Please enter text to check.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/grammar-checker", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input })
+    });
+    const data = await res.json();
+    responseContainer.textContent = data.generated_text || data.error;
+    addHistory('Grammar Checker', input, data.generated_text || data.error);
+  } catch (err) {
+    responseContainer.textContent = "An error occurred.";
+  }
+});
+
+document.getElementById('generateWriting').addEventListener('click', async () => {
+  const input = document.getElementById('writingInput').value;
+  const responseContainer = document.getElementById('writingResponse');
+
+  if (!input) {
+    responseContainer.textContent = "Please enter a topic or outline.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input })
+    });
+    const data = await res.json();
+    responseContainer.textContent = data.generated_text || data.error;
+    addHistory('Writing Assistant', input, data.generated_text || data.error);
+  } catch (err) {
+    responseContainer.textContent = "An error occurred.";
+  }
+});
+
+document.getElementById('checkPlagiarism').addEventListener('click', async () => {
+  const input = document.getElementById('plagiarismInput').value;
+  const responseContainer = document.getElementById('plagiarismResponse');
+
+  if (!input) {
+    responseContainer.textContent = "Please enter text to check for plagiarism.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/plagiarism-checker", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input })
+    });
+    const data = await res.json();
+    responseContainer.textContent = data.generated_text || data.error;
+    addHistory('Plagiarism Checker', input, data.generated_text || data.error);
+  } catch (err) {
+    responseContainer.textContent = "An error occurred.";
+  }
+});
+
+document.getElementById('summarizeText').addEventListener('click', async () => {
+  const input = document.getElementById('summarizerInput').value;
+  const responseContainer = document.getElementById('summarizerResponse');
+
+  if (!input) {
+    responseContainer.textContent = "Please enter text to summarize.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input })
+    });
+    const data = await res.json();
+    responseContainer.textContent = data.generated_text || data.error;
+    addHistory('Summarizer', input, data.generated_text || data.error);
+  } catch (err) {
+    responseContainer.textContent = "An error occurred.";
+  }
+});
+
+document.getElementById('brainstromingText').addEventListener('click', async () => {
+  const input = document.getElementById('brainstromingInput').value;
+  const responseContainer = document.getElementById('brainstromingResponse');
+
+  if (!input) {
+    responseContainer.textContent = "Please enter text to brainstorm.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/Brainstroming", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input })
+    });
+    const data = await res.json();
+    responseContainer.textContent = data.generated_text || data.error;
+    addHistory('Brainstroming', input, data.generated_text || data.error);
+  } catch (err) {
+    responseContainer.textContent = "An error occurred.";
+  }
+});
+
+  </script>
+
+</body>
+</html>
