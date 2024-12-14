@@ -1,0 +1,15 @@
+# Ignore Python virtual environments
+blog_writer_env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore IDE and editor configurations
+.vscode/
+*.swp
+*.swo
+
+# Ignore logs and other temporary files
+*.log
