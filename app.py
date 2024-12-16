@@ -1,3 +1,4 @@
+from waitress import serve
 from flask import Flask, request, jsonify,render_template
 from flask_cors import CORS  
 import google.generativeai as genai
@@ -195,4 +196,4 @@ def get_history():
 
 if __name__ == '__main__':
     
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    serve(host='0.0.0.0', port=5000, debug=True)
